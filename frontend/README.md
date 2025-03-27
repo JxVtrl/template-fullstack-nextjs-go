@@ -1,40 +1,136 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Frontend - Next.js Todo App
 
-## Getting Started
+Frontend da aplicação de Lista de Tarefas construído com Next.js, TypeScript e Tailwind CSS.
 
-First, run the development server:
+## Tecnologias Utilizadas
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Next.js 14
+- TypeScript
+- Tailwind CSS
+- Axios
+- React Hooks
+
+## Estrutura do Projeto
+
+```
+frontend/
+├── src/
+│   ├── pages/          # Páginas da aplicação
+│   └── styles/         # Estilos globais
+├── public/             # Arquivos estáticos
+├── Dockerfile          # Configuração do Docker
+└── next.config.js      # Configuração do Next.js
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Pré-requisitos
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- Node.js 18+ (apenas para desenvolvimento local)
+- Docker (recomendado)
+- Docker Compose (recomendado)
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+## 🚀 Como Executar
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+### Usando Docker Compose (Recomendado)
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Esta é a forma mais simples de executar o projeto, pois o Docker Compose já faz o build e execução de todos os serviços automaticamente.
 
-## Learn More
+Na raiz do projeto:
+```bash
+docker-compose up --build
+```
 
-To learn more about Next.js, take a look at the following resources:
+O comando acima irá:
+- Construir a imagem Docker do frontend
+- Iniciar o serviço
+- Configurar a rede com o backend
+- Expor a porta 3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+O frontend estará disponível em `http://localhost:3000`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Desenvolvimento Local (Alternativo)
 
-## Deploy on Vercel
+Se preferir executar sem Docker:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Instale as dependências:
+```bash
+npm install
+# ou
+yarn install
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+2. Configure as variáveis de ambiente:
+```bash
+# .env.local
+NEXT_PUBLIC_API_URL=http://localhost:8080
+```
+
+3. Execute o servidor de desenvolvimento:
+```bash
+npm run dev
+# ou
+yarn dev
+```
+
+O servidor estará disponível em `http://localhost:3000`
+
+## Build
+
+Para criar uma build de produção:
+```bash
+npm run build
+# ou
+yarn build
+```
+
+## Docker
+
+O frontend está configurado para ser executado facilmente com Docker. O Docker Compose já gerencia todo o processo de build e execução.
+
+### Usando Docker Compose (Recomendado)
+
+```bash
+# Iniciar os serviços
+docker-compose up --build
+
+# Parar os serviços
+docker-compose down
+
+# Ver logs
+docker-compose logs -f frontend
+```
+
+### Executando Individualmente (Alternativo)
+
+Se precisar executar o frontend separadamente:
+```bash
+docker build -t frontend .
+docker run -p 3000:3000 frontend
+```
+
+## Funcionalidades
+
+- Listagem de tarefas
+- Adição de novas tarefas
+- Marcação de tarefas como concluídas
+- Exclusão de tarefas
+- Interface responsiva
+- Feedback visual de ações
+- Tratamento de erros
+- Loading states
+
+## Integração com o Backend
+
+O frontend se comunica com o backend através de uma API REST:
+
+- GET `/api/todos` - Lista todas as tarefas
+- POST `/api/todos` - Cria uma nova tarefa
+- PUT `/api/todos/:id` - Atualiza uma tarefa
+- DELETE `/api/todos/:id` - Remove uma tarefa
+
+## Contribuição
+
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
