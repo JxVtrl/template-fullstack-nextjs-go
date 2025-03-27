@@ -20,10 +20,11 @@ export default function Home() {
   const fetchTodos = async () => {
     try {
       const response = await axios.get('http://localhost:8080/api/todos');
-      setTodos(response.data);
+      setTodos(response.data || []);
     } catch (err) {
       setError('Erro ao carregar tarefas');
       console.error(err);
+      setTodos([]);
     } finally {
       setLoading(false);
     }
@@ -38,7 +39,7 @@ export default function Home() {
         title: newTodo,
         completed: false
       });
-      setTodos([...todos, response.data]);
+      setTodos(prevTodos => [...prevTodos, response.data]);
       setNewTodo('');
     } catch (err) {
       setError('Erro ao adicionar tarefa');
@@ -52,7 +53,7 @@ export default function Home() {
         ...todo,
         completed: !todo.completed
       });
-      setTodos(todos.map(t => 
+      setTodos(prevTodos => prevTodos.map(t => 
         t.id === todo.id ? { ...t, completed: !t.completed } : t
       ));
     } catch (err) {
@@ -64,7 +65,7 @@ export default function Home() {
   const deleteTodo = async (id: number) => {
     try {
       await axios.delete(`http://localhost:8080/api/todos/${id}`);
-      setTodos(todos.filter(t => t.id !== id));
+      setTodos(prevTodos => prevTodos.filter(t => t.id !== id));
     } catch (err) {
       setError('Erro ao deletar tarefa');
       console.error(err);
@@ -107,27 +108,33 @@ export default function Home() {
                 </form>
 
                 <ul className="space-y-4">
-                  {todos.map(todo => (
-                    <li key={todo.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                      <div className="flex items-center gap-3">
-                        <input
-                          type="checkbox"
-                          checked={todo.completed}
-                          onChange={() => toggleTodo(todo)}
-                          className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                        />
-                        <span className={`${todo.completed ? 'line-through text-gray-500' : ''}`}>
-                          {todo.title}
-                        </span>
-                      </div>
-                      <button
-                        onClick={() => deleteTodo(todo.id)}
-                        className="text-red-600 hover:text-red-800"
-                      >
-                        Deletar
-                      </button>
+                  {todos && todos.length > 0 ? (
+                    todos.map(todo => (
+                      <li key={todo.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                        <div className="flex items-center gap-3">
+                          <input
+                            type="checkbox"
+                            checked={todo.completed}
+                            onChange={() => toggleTodo(todo)}
+                            className="h-5 w-5 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
+                          />
+                          <span className={`${todo.completed ? 'line-through text-gray-500' : ''}`}>
+                            {todo.title}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => deleteTodo(todo.id)}
+                          className="text-red-600 hover:text-red-800"
+                        >
+                          Deletar
+                        </button>
+                      </li>
+                    ))
+                  ) : (
+                    <li className="text-center text-gray-500 py-4">
+                      Nenhuma tarefa encontrada. Adicione uma nova tarefa!
                     </li>
-                  ))}
+                  )}
                 </ul>
               </div>
             </div>
